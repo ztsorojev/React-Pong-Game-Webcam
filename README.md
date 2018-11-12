@@ -5,7 +5,7 @@ Play the famous Pong Game using hand gestures and vision recognition
 
 In the project directory, run:
 
-`npm install`
+`npm install` <br>
 `npm start`
 
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
