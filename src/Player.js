@@ -4,7 +4,7 @@ export default class Player extends Rect
 {
     constructor()
     {
-        super(5, 40);
+        super(10, 80);
         this.vel = new Vec();
         this.score = 0;
 
@@ -17,9 +17,15 @@ export default class Player extends Rect
         this._lastPos.y = this.pos.y;
     }
 
-    render(context) 
+    renderPlayer1(context) 
     {
-        context.fillStyle = '#fff';
-        context.fillRect(this.left, this.top, this.size.x, this.size.y);
+        context.fillStyle = "#7acfd6";
+		context.fillRect(this.left, this.top, this.size.x, this.size.y);
+    }
+	
+	renderPlayer2(context) 
+    {
+        context.fillStyle = '#b11a21';
+		context.fillRect(this.left, this.top, this.size.x, this.size.y);
     }
 }

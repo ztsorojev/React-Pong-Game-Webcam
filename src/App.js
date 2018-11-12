@@ -67,11 +67,29 @@ class App extends Component {
     });
 
     //draw board
-    context.fillStyle = '#000';
+    context.fillStyle = '#202020'; //Darkish gray
     context.fillRect(0, 0, cvs.width, cvs.height);
+	
+	context.shadowBlur=10;  //Add some shadows to every element
+	context.shadowColor="#ddd"; //Silver
+	
+	//Draw the middle line
+	context.beginPath();
+	context.strokeStyle="#ddd";
+	context.moveTo(cvs.width / 2, 0);
+	context.lineTo(cvs.width / 2, cvs.height);
+	context.stroke();
 
     this.ball.render(context);
-    this.players.forEach(player => player.render(context));
+    //this.players.forEach(player => player.render(context));
+	if(this.players.length > 1) {
+		this.players[0].renderPlayer1(context);
+		this.players[1].renderPlayer2(context);
+	}
+	else {
+		console.log("Error, fewer than 2 players initialized.");
+	}
+	
 
     this.renderScore();
 
@@ -177,10 +195,11 @@ class App extends Component {
   renderScore() {
     let canvas = this.state.canvas;
     let ctx = this.state.context;
-    ctx.font = "30px Orbitron";
+	const fontSize = 40;
+    ctx.font = fontSize + "px oswald";
     ctx.fillStyle = "#fff";
-    ctx.fillText(this.players[0].score, canvas.width / 2 / 2, 50);
-    ctx.fillText(this.players[1].score, canvas.width / 2 * 1.5, 50);
+    ctx.fillText(this.players[0].score, (canvas.width / 2) - 50 - fontSize/2, 50);
+    ctx.fillText(this.players[1].score, (canvas.width / 2 + 50), 50);
   }
 
   render() {

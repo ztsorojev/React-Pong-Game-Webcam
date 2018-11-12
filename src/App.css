@@ -5,14 +5,26 @@ body {
   margin: 0;
 }
 
+@font-face {
+	font-family: "oswald";
+	src: url("fonts/oswald/Oswald-Bold.ttf");
+}
+@font-face {
+	font-family: "abril";
+	src: url("fonts/abril-fatface/AbrilFatface-Regular.otf");
+}
+
+
+
 canvas {
   padding: 0;
   margin: auto;
   display: block;
   border: solid 1px #fff;
-  border-left: none;
-  border-right: none;
-  image-rendering: pixelated;
+  /*border-left: none;
+  border-right: none;*/
+  /*image-rendering: pixelated;*/
+  image-rendering: auto;
   width: 100%;
 }
 
