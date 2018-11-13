@@ -7,11 +7,11 @@ body {
 
 @font-face {
 	font-family: "oswald";
-	src: url("fonts/oswald/Oswald-Bold.ttf");
+	src: url("./fonts/oswald/Oswald-Bold.ttf");
 }
 @font-face {
 	font-family: "abril";
-	src: url("fonts/abril-fatface/AbrilFatface-Regular.otf");
+	src: url("./fonts/abril-fatface/AbrilFatface-Regular.otf");
 }
 
 

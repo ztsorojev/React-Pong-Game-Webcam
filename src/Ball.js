@@ -9,7 +9,7 @@ export default class Ball extends Rect
         this.vel = new Vec();
 		this.trailX = [];
 		this.trailY = [];
-		this.trailLimit = 10;
+		this.trailLimit = 3;
     }
 
     render(context) {

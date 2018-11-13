@@ -130,7 +130,7 @@ export default class VisionRecognition {
 		      // Look from here Zaurbek
     			let percentString = res.confidences[i];
     			let percent = parseFloat(percentString);
-    			percent = percent * 100;
+    			percent = Math.floor(percent * 100);
 
     			if(percent > max){
               //console.log("Up: " + direction);
@@ -140,7 +140,7 @@ export default class VisionRecognition {
       
           // Update info text
           if (exampleCount[i] > 0) {
-            this.infoTexts[i].innerText = ` ${exampleCount[i]} examples - ${res.confidences[i] * 100}%` 
+            this.infoTexts[i].innerText = ` ${exampleCount[i]} examples - ${percent}%` 
           }
         }
         //reset
