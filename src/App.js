@@ -3,6 +3,9 @@ import Ball from './Ball';
 import Player from './Player';
 import VisionRecognition from './VisionRecognition';
 import './App.css';
+import io from 'socket.io-client';
+
+//import doSomething from '../node_modules/react-scripts/scripts/start.js';
 
 let gameWidth=600, gameHeight=400;
 let rounds = [7, 5, 3, 2];
@@ -11,9 +14,13 @@ let colors = ['#202020', '#2ecc71', '#3498db', '#e74c3c'];
 
 class App extends Component {
 
+  //isHost = true;
+  //serverAPI = require('../node_modules/react-scripts/scripts/start.js');
+
   constructor(props)
   {
     super(props);
+	var something = this;
     this.state = {
       canvas: null,
       context: null,
@@ -21,12 +28,36 @@ class App extends Component {
       gameActive: false,
       round: 0,
       boardColor: "#202020",
-      direction: 2   //0 = UP, 1 = DOWN, 2 = IDDLE
+      direction: 2,   //0 = UP, 1 = DOWN, 2 = IDDLE
+	  isHost: false
     }
     this.initialSpeed = 250;
     this.ball = null;
+	this.socket = io('http://localhost:3000');
+	//this.isHost = false;
+	this.socket.on('connect', function(){
+		  console.log("SOMETHING CONNECT");
+		  //this.socket.emit("message","LIGHTYEAR");
+	  });
+	  this.socket.on('event', function(data){
+		  console.log("SOMETHING EVENT: " + data);
+	  });
+	  this.socket.on('role', function(data){
+		  console.log("Role is: " + data);
+		  if(data == "host") {
+			  console.log("Setting host!");
+			  something.setState({
+				isHost: true
+			   });
+		  }
+		  //role can be "host" or "client"
+	  });
+	  this.socket.on('disconnect', function(){
+		  console.log("SOMETHING DISCONNECT");
+	});
     this.players = [];
   }
+  
 
   //React native fct: invoked immediately after a component is mounted (inserted into the tree)
   componentDidMount() {
@@ -39,11 +70,23 @@ class App extends Component {
     const context = this.refs.canvas.getContext('2d');
     this.setState({ context: context });
     this.initialize();
-    requestAnimationFrame(() => {this.update()});
+	
+    requestAnimationFrame(() => {
+		
+		//setInterval(function() {
+			this.update()
+		//}, 500);
+		
+	});
+	
   }
+  
+  //export getBallPos = function() {
+  //	  return "Ball: " + ball.pos.x + ", " + ball.pos.y;
+  //}
 
   update() {
-
+	
     if(this.state.gameActive) 
     {
       let dt = 0.02;
@@ -52,7 +95,11 @@ class App extends Component {
       const ball = this.ball;
       ball.pos.x += ball.vel.x * dt;
       ball.pos.y += ball.vel.y * dt;
-
+	  
+	  //console.log("Ball: " + ball.pos.x + ", " + ball.pos.y);
+	  //serverAPI.doSomething("Ball: " + ball.pos.x + ", " + ball.pos.y);
+		  
+	  
       if (ball.right < 0 || ball.left > cvs.width) {
           ++this.players[ball.vel.x < 0 | 0].score;
           this.reset(cvs);
@@ -61,6 +108,18 @@ class App extends Component {
       if ((ball.vel.y < 0 && ball.top < 0) || (ball.vel.y > 0 && ball.bottom > cvs.height)) {
           ball.vel.y = -ball.vel.y;
       }
+	  
+	  const isHost = this.state.isHost;
+	  console.log("HOST: " + isHost);
+	  if(isHost == true) {
+		  console.log("HOSTING");
+		  this.socket.emit("py_ballxy", this.players[0].pos.y + "," + ball.pos.x + "," + ball.pos.y);
+	  }
+	  else {
+		  console.log("NOT HOSTING");
+		  this.socket.emit("py", this.players[0].pos.y);
+	  }
+	  
 
       //the AI will follow the ball with an offset factor that decreases after each round
       this.players[1].pos.y = ball.pos.y * (1.5 - this.state.round/10);
@@ -90,7 +149,10 @@ class App extends Component {
       this.movePlayer();
 
       // Next frame
-      requestAnimationFrame(() => {this.update()});
+      requestAnimationFrame(() => {
+		  //setTimeout(this.update(), 1000);
+		  this.update();
+	  });
     }
 
     //if the player won the round
@@ -277,4 +339,3 @@ class App extends Component {
 }
 
 export default App;
-

@@ -17,7 +17,49 @@ code {
     monospace;
 }
 
-
+.option_box {
+	position: absolute;
+	left: 50px;
+	bottom: 50px;
+	
+	width: 200px;
+	height: 200px;
+	
+}
+.server_box {
+	
+	padding: 30px;
+	text-align: center;
+	font-size: 30px;
+	color: white;
+	
+	border: 2px solid #7acfd6;
+	background-color: #7acfd6;
+	transition: background-color 0.5s;
+}
+.server_box .active {
+	cursor: pointer;
+	
+	color: #7acfd6;
+	background-color: rgba(122,207,214,0.5)
+}
+.client_box {
+	padding: 30px;
+	
+	text-align: center;
+	font-size: 30px;
+	color: white;
+	
+	border: 2px solid #b11a21;
+	background-color: #b11a21;
+	transition: background-color 0.5s;
+}
+.client_box .active  {
+	cursor: pointer;
+	
+	color: #b11a21;
+	background-color: rgba(177,26,33,0.5)
+}
 
 #root {
 	
