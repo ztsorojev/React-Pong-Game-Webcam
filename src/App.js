@@ -33,7 +33,7 @@ class App extends Component {
     }
     this.initialSpeed = 250;
     this.ball = null;
-	this.socket = io('http://localhost:3000');
+	this.socket = io('172.31.79.32:3000');
 	//this.isHost = false;
 	this.socket.on('connect', function(){
 		  console.log("SOMETHING CONNECT");
@@ -54,7 +54,7 @@ class App extends Component {
 	  });
 	  this.socket.on('disconnect', function(){
 		  console.log("SOMETHING DISCONNECT");
-	});
+	}); 
     this.players = [];
   }
   
@@ -118,7 +118,7 @@ class App extends Component {
 	  else {
 		  console.log("NOT HOSTING");
 		  this.socket.emit("py", this.players[0].pos.y);
-	  }
+	  } 
 	  
 
       //the AI will follow the ball with an offset factor that decreases after each round
@@ -215,6 +215,11 @@ class App extends Component {
     this.players.forEach(p => {
       p.pos.y = cvs.height / 2
     });
+	
+	document.getElementById("game_menu").innerHTML = "Train the images for UP, DOWN, and IDLE" + 
+													 "<br />"+ "&nbsp;" + "&nbsp;" + "&nbsp;" +
+													 "&nbsp;" + "&nbsp;" + "&nbsp;" + "&nbsp;" + 
+													 "Then click the game to begin!"; 
 
     this.reset(cvs);
     this.listen(cvs);
@@ -253,6 +258,8 @@ class App extends Component {
 
   play()
   {
+	document.getElementById("game_menu").innerHTML = "";   
+	  
     const b = this.ball;
     if (b.vel.x === 0 && b.vel.y === 0) {
         b.vel.x = 200 * (Math.random() > .5 ? 1 : -1);

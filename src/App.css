@@ -66,6 +66,12 @@ button {
   margin: 0 auto;
 }
 
+.button_spacing {
+	display: block;
+	width: 200px;
+	color: #fff;
+}
+
 /*****************************/
 
 .App {

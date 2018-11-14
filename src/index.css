@@ -61,6 +61,16 @@ code {
 	background-color: rgba(177,26,33,0.5)
 }
 
+#game_menu {
+	position: absolute;
+	left: 80px;
+	top: 158px;
+	
+	font-size: 25px;
+	color: white;
+}
+	
+
 #root {
 	
 	margin: auto;

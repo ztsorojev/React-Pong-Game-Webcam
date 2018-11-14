@@ -50,6 +50,7 @@ export default class VisionRecognition {
 
       // Create info text
       const infoText = document.createElement('span')
+	  infoText.className = "button_spacing";
       infoText.innerText = " No examples added";
       div.appendChild(infoText);
       this.infoTexts.push(infoText);
