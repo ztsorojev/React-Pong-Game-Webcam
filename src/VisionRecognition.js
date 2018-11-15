@@ -1,3 +1,13 @@
+/*
+ * We copied a big part of this code, but made some changes to integrate it with our app.
+ *
+ * What: Vision recognition by classifying images with a neural net
+ * Where: https://teachablemachine.withgoogle.com/
+ * Why: Using machine learning for image classification is not a 
+ *      trivial task. Would take longer than the time allotted
+ *      for the project to impliment if created from scratch.
+ */
+
 import * as mobilenetModule from '@tensorflow-models/mobilenet';
 import * as tf from '@tensorflow/tfjs';
 import * as knnClassifier from '@tensorflow-models/knn-classifier';
@@ -141,7 +151,6 @@ export default class VisionRecognition {
             this.infoTexts[i].style.fontWeight = 'normal';
           }
 		
-		      // Look from here Zaurbek
     			let percentString = res.confidences[i];
     			let percent = parseFloat(percentString);
     			percent = Math.floor(percent * 100);
