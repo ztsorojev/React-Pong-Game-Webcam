@@ -11,7 +11,7 @@ body {
     sans-serif;
   align-items: center;
   background: #202020;
-  display: block;
+  display: flex;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-image: url("./img/bg.jpg");

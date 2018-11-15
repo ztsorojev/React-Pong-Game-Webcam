@@ -54,7 +54,6 @@ class App extends Component {
   update() 
   {
     const cvs = this.state.canvas;
-    const context = this.state.context;
 
     if(this.state.gameActive) 
     {

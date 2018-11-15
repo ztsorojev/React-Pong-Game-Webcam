@@ -102,6 +102,8 @@ video {
   background-position: center;
   background-size: cover;*/
   font-family: "Pangram Light";
+  margin: auto;
+  width: 35%;
 }
 
 .calibration-wrapper > p {
