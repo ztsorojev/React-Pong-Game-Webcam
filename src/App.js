@@ -67,11 +67,15 @@ class App extends Component {
           ball.vel.y = -ball.vel.y;
 
           //avoid having the ball bouncing vertically
-          if(ball.vel.x < 10 && ball.vel.x > -10) ball.vel.x += 30;
+          if(ball.vel.x < 80 && ball.vel.x > -80) ball.vel.x += 100;
       }
 
-      //the AI will follow the ball with an offset factor that decreases after each round
-      this.players[1].pos.y = ball.pos.y * (1.4 - this.state.round/10);
+      //if the ball is not boucing vertically, follow it
+      if(!(ball.vel.x < 70 && ball.vel.x > -70))
+      {
+        //the AI will follow the ball with an offset factor that decreases after each round
+        this.players[1].pos.y = ball.pos.y * (1.4 - this.state.round/10);
+      }
 
       //prevent the paddles from going outside the board region
       this.players.forEach(player => {
@@ -251,7 +255,11 @@ class App extends Component {
   }
 
   movePlayer() {
-    this.helpPlayer();
+    //only help the user if the ball is not boucing vertically (otherwise it will follow it and bounce itself)
+    if(!(this.ball.vel.x < 50 && this.ball.vel.x > -50))
+    {
+      this.helpPlayer();
+    }
     if(this.state.direction == 0) {
       this.players[0].pos.y -= 10;
     } 
