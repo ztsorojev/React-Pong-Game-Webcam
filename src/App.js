@@ -5,7 +5,7 @@ import VisionRecognition from './VisionRecognition';
 import './App.css';
 
 let gameWidth=600, gameHeight=400;
-let rounds = [1, 1, 1];
+let rounds = [5, 3, 1];
 let colors = ['#202020', '#2ecc71', '#3498db'];
 
 class App extends Component {
