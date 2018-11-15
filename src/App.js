@@ -5,9 +5,8 @@ import VisionRecognition from './VisionRecognition';
 import './App.css';
 
 let gameWidth=600, gameHeight=400;
-let rounds = [7, 5, 3, 2];
-let colors = ['#202020', '#2ecc71', '#3498db', '#e74c3c'];
-
+let rounds = [1, 1, 1];
+let colors = ['#202020', '#2ecc71', '#3498db'];
 
 class App extends Component {
 
@@ -38,17 +37,19 @@ class App extends Component {
 
     const context = this.refs.canvas.getContext('2d');
     this.setState({ context: context });
+    this.setVisionRecognition();
     this.initialize();
     requestAnimationFrame(() => {this.update()});
   }
 
   update() {
 
+    const cvs = this.state.canvas;
+    const context = this.state.context;
+
     if(this.state.gameActive) 
     {
       let dt = 0.02;
-      const cvs = this.refs.canvas;
-      const context = this.state.context;
       const ball = this.ball;
       ball.pos.x += ball.vel.x * dt;
       ball.pos.y += ball.vel.y * dt;
@@ -56,14 +57,18 @@ class App extends Component {
       if (ball.right < 0 || ball.left > cvs.width) {
           ++this.players[ball.vel.x < 0 | 0].score;
           this.reset(cvs);
+          this.play();
       }
 
       if ((ball.vel.y < 0 && ball.top < 0) || (ball.vel.y > 0 && ball.bottom > cvs.height)) {
           ball.vel.y = -ball.vel.y;
+
+          //avoid having the ball bouncing vertically
+          if(ball.vel.x < 10 && ball.vel.x > -10) ball.vel.x += 30;
       }
 
       //the AI will follow the ball with an offset factor that decreases after each round
-      this.players[1].pos.y = ball.pos.y * (1.5 - this.state.round/10);
+      this.players[1].pos.y = ball.pos.y * (1.4 - this.state.round/10);
 
       //prevent the paddles from going outside the board region
       this.players.forEach(player => {
@@ -89,8 +94,6 @@ class App extends Component {
 
       this.movePlayer();
 
-      // Next frame
-      requestAnimationFrame(() => {this.update()});
     }
 
     //if the player won the round
@@ -101,15 +104,18 @@ class App extends Component {
         setTimeout(() => { this.drawText("Congrats! You won the game!"); }, 1000);
         this.setState({
           gameActive: false
-        }); 
+        });
+        cvs.addEventListener('click', () => {
+          this.initialize();
+        });
       } else {
         //if there are rounds left, reset score and increase difficulty (speed)
-        setTimeout(() => { this.drawText("You won this round! On to the next one!"); }, 1000);
+        //setTimeout(() => { this.drawText("You won this round! On to the next one!"); }, 1000);
         
         this.players.forEach(player => player.score = 0);
-
-        this.ball.vel.x *= 1.2;
-        this.ball.vel.y *= 1.2;
+        
+        this.ball.vel.x *= 1.3;
+        this.ball.vel.y *= 1.3;
 
         let nextRound = this.state.round + 1;
         this.setState({
@@ -123,7 +129,23 @@ class App extends Component {
     else if(this.players[1].score == rounds[this.state.round]) {
       this.setState({ gameActive: false });
       setTimeout(() => { this.drawText("Game over!"); }, 500);
+      cvs.addEventListener('click', () => {
+          this.initialize();
+        });
     }
+
+    // Next frame
+    requestAnimationFrame(() => {this.update()});
+
+  }
+
+  setVisionRecognition() {
+    //Display webcam + training model for recognition
+    let vision = new VisionRecognition();
+
+    this.setState({
+      vision: vision
+    });
 
   }
 
@@ -131,16 +153,14 @@ class App extends Component {
   {
     const cvs = this.refs.canvas;
     const context = cvs.getContext('2d');
-
-    //Display webcam + training model for recognition
-    let vision = new VisionRecognition();
-    console.log("direction: "+ vision.direction);
-
+    
     this.setState({
       canvas: cvs,
       context: context,
-      vision: vision,
-      gameActive: true
+      gameActive: true,
+      round: 0,
+      boardColor: "#202020",
+      direction: 2
     });
 
     //Create ball and players
@@ -153,6 +173,9 @@ class App extends Component {
     this.players.forEach(p => {
       p.pos.y = cvs.height / 2
     });
+
+    document.getElementById("game_menu").innerHTML = "Train the images for UP, DOWN, and IDLE" + 
+                           "<br />"+ "<span>Then click the game to begin!</span>"; 
 
     this.reset(cvs);
     this.listen(cvs);
@@ -191,6 +214,7 @@ class App extends Component {
 
   play()
   {
+    document.getElementById("game_menu").innerHTML = "";  
     const b = this.ball;
     if (b.vel.x === 0 && b.vel.y === 0) {
         b.vel.x = 200 * (Math.random() > .5 ? 1 : -1);
@@ -199,7 +223,31 @@ class App extends Component {
     }
   }
 
+  /*
+   * If ball in certain region of player, we automatically move player to block the ball
+   */
+  helpPlayer() {
+    let playerPosX = this.players[0].pos.x;
+    let playerPosY = this.players[0].pos.y;
+    let playerHeight = this.players[0].size.y;
+    let ballPosX = this.ball.pos.x;
+    let ballPosY = this.ball.pos.y;
+    let margin = 30;
+
+    let topLimit = playerPosY + playerHeight/2 + margin;
+    let bottLimit = playerPosY - playerHeight/2 - margin;
+
+    let cdt1 = (ballPosY > playerPosY + playerHeight/2 && ballPosY < topLimit);
+    let cdt2 = (ballPosY > bottLimit && ballPosY < playerPosY - playerHeight/2);
+
+    if( (cdt1 || cdt2) && ballPosX < playerPosX + 30) {
+      if(ballPosY > playerPosY) this.players[0].pos.y += 15;
+      else this.players[0].pos.y -= 15;
+    }
+  }
+
   movePlayer() {
+    this.helpPlayer();
     if(this.state.direction == 0) {
       this.players[0].pos.y -= 10;
     } 
@@ -212,16 +260,22 @@ class App extends Component {
     //draw board
     let cvs = this.state.canvas;
     let ctx = this.state.context;
+    
     ctx.fillStyle = this.state.boardColor;
     ctx.fillRect(0, 0, cvs.width, cvs.height);
-  
-    ctx.shadowBlur=10;  //Add some shadows to every element
+    let img = new Image();
+    img.src = "./img/texture-background-wallpaper-black-wood1-1920x1080.jpg";
+    img.onload = function(){
+      ctx.drawImage(img,0,0);   
+    }
+
+    ctx.shadowBlur=5;  //Add some shadows to every element
     ctx.shadowColor="#ddd"; //Silver
     
     //Draw the middle line
     ctx.beginPath();
     ctx.strokeStyle="#ddd";
-    ctx.moveTo(cvs.width / 2, 0);
+    ctx.moveTo(cvs.width / 2, 60);
     ctx.lineTo(cvs.width / 2, cvs.height);
     ctx.stroke();
 
@@ -234,17 +288,12 @@ class App extends Component {
   renderScore() {
     let canvas = this.state.canvas;
     let ctx = this.state.context;
-	  
-    //background for round info
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = this.state.boardColor;
-    ctx.fillRect((canvas.width / 2)-20, 0, 40, 60);
 
     //round info
-    let roundText = "Round " + this.state.round;
+    let roundText = "Round " + (this.state.round + 1);
     let roundPts = rounds[this.state.round] + " pts";
     ctx.fillStyle = "#fff";
-    ctx.shadowBlur = 5;
+    ctx.shadowBlur = 0;
     ctx.font = 15 + "px oswald";
     ctx.textAlign = "center";
     ctx.fillText(roundText, (canvas.width / 2), 20);
@@ -264,6 +313,8 @@ class App extends Component {
     let ctx = this.state.context;
     const fontSize = 30;
     ctx.font = fontSize + "px oswald";
+    ctx.shadowBlur = 2;
+    ctx.shadowColor="#0086f8";
     ctx.fillStyle = "#fff";
     ctx.textAlign = "center"; 
     ctx.fillText(text, canvas.width/2, canvas.height/2);

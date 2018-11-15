@@ -30,18 +30,32 @@ export default class VisionRecognition {
     this.video.setAttribute('autoplay', '');
     this.video.setAttribute('playsinline', '');
 
+    const wrapper = document.createElement('div');
+    wrapper.setAttribute('class', 'calibration-wrapper');
+    document.body.appendChild(wrapper);
+
+    const textCalib = document.createElement('p');
+    textCalib.innerHTML = "Calibration";
+    wrapper.appendChild(textCalib);
+
     // Add video element to DOM
-    document.body.appendChild(this.video);
+    wrapper.appendChild(this.video);
+
+    const subWrapper = document.createElement('div');
+    subWrapper.setAttribute('class', 'calibration-btns-wrapper');
+    wrapper.appendChild(subWrapper);
 
     // Create training buttons and info texts    
     for (let i = 0; i < NUM_CLASSES; i++) {
       const div = document.createElement('div');
-      document.body.appendChild(div);
+      div.setAttribute('class', 'calibration-btn');
+      subWrapper.appendChild(div);
       div.style.marginBottom = '10px';
 
       // Create training button
       const button = document.createElement('button')
-      button.innerText = "Train " + DIRECTION[i];
+      //button.innerText = "Train " + DIRECTION[i];
+      button.innerText = DIRECTION[i];
       div.appendChild(button);
 
       // Listen for mouse events when clicking the button

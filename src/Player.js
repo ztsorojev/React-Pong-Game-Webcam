@@ -19,13 +19,13 @@ export default class Player extends Rect
 
     renderPlayer1(context) 
     {
-        context.fillStyle = "#7acfd6";
+        context.fillStyle = "#23e2f2";
 		context.fillRect(this.left, this.top, this.size.x, this.size.y);
     }
 	
 	renderPlayer2(context) 
     {
-        context.fillStyle = '#b11a21';
+        context.fillStyle = '#e62244';
 		context.fillRect(this.left, this.top, this.size.x, this.size.y);
     }
 }
