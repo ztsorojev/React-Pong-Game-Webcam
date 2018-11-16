@@ -1,5 +1,5 @@
-# Pong-Game-Webcam
-Play the famous Pong Game using hand gestures and vision recognition
+# Gesture based Pong Game in React
+Play the famous Pong Game using hand gestures. You don't have to touch anything with your hands! We use vision recognition and machine learning to detect the activity on your webcam.
 
 ## Run the code
 
@@ -10,6 +10,12 @@ In the project directory, run:
 
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
+## How to play
+
+* First, train the machine learning model. Press and maintain each of the 3 buttons at the bottom to take pictures for each gesture.
+* Click on the canvas to start the game.
+
+![Alt text](https://github.com/ztsorojev/Pong-Game-Webcam/blob/master/screenshot.png)
 
 
 Note: We used and took inspiration from the following tools to get started:
