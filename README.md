@@ -16,7 +16,9 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 * Click on the canvas to start the game.
 
 ## Watch the demo on YouTube
-[![YouTube Video Demo](https://github.com/ztsorojev/Pong-Game-Webcam/blob/master/screenshot.png)](https://youtu.be/jIUPh0hTwV8)
+
+[![YouTube Video Demo](https://user-images.githubusercontent.com/38893718/134111737-3df1a0cf-55e6-42eb-a3b0-00a8bb889358.png)](https://youtu.be/jIUPh0hTwV8)
+
 
 
 Note: We used and took inspiration from the following tools to get started:
